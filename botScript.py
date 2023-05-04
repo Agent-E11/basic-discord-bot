@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 # Load environment variables from the `.env` file, set `TOKEN` to the environment variable `DISCORD_TOKEN`.
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('DISCORD_GUILD')
 
 # If the token isn't present, print an error and quit
 if TOKEN == None:
@@ -19,6 +20,14 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+
+    for guild in client.guilds:
+        if guild.name == GUILD:
+            break
+
+    print(
+        f'{client.user} has connected to the guild:\n'
+        f'Name: {guild.name}, ID: {guild.id}'
+    )
 
 client.run(TOKEN)
