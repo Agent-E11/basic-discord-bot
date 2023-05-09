@@ -2,14 +2,17 @@ import os
 import discord
 from dotenv import load_dotenv
 
-# Load environment variables from the `.env` file, set `TOKEN` to the environment variable `DISCORD_TOKEN`.
+# Load environment variables from the `.env` file.
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+GUILD_ID = int(os.getenv('DISCORD_GUILD_ID'))
 
 # If the token isn't present, print an error and quit
 if TOKEN == None:
     print("Error: No DISCORD_TOKEN present.")
+    quit()
+if GUILD_ID == None:
+    print("Error: No DISCORD_GUILD_ID present.")
     quit()
 
 # Set the intents of the bot, to be given to the `Client` constructor
@@ -23,7 +26,7 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
 
-    guild = discord.utils.get(client.guilds, name=GUILD)
+    guild: discord.Guild = client.get_guild(GUILD_ID)
 
     print(
         f'{client.user} has connected to the guild:\n'
