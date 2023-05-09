@@ -43,9 +43,16 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message: discord.Message):
-    if "bot" in message.content.lower():
-        await client.get_channel(message.channel.id).send('Hello')
 
-    print(f'{message.author.name}: {message.content}''')
+    if message.content.startswith('!'):
+        command = message.content.split()[0]
+        params = message.content.split()[1:]
+
+        print(f'Command: {command}\nParameters: {params}')
+    else:    
+        if "bot" in message.content.lower():
+            await client.get_channel(message.channel.id).send('Hello')
+
+    print(f'{message.author.name}: {message.content}')
 
 client.run(TOKEN)
