@@ -16,6 +16,7 @@ if TOKEN == None:
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 client = discord.Client(intents=intents)
 
@@ -42,8 +43,9 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message: discord.Message):
-    if message.content.isnumeric():
-        await client.create_dm()
-    print(f'Message sent: {message.content}')
+    if "bot" in message.content.lower():
+        await client.get_channel(message.channel.id).send('Hello')
+
+    print(f'{message.author.name}: {message.content}''')
 
 client.run(TOKEN)
