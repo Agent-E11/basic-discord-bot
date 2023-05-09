@@ -7,4 +7,9 @@
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 ```
-- 
+- To access the contents of messages, you need to enable the `message_content` privileged intent:
+```
+intents = discord.Intents.default()
+intents.message_content = True
+```
+- You need to enable the `message_content` privileged intent in the developer portal: Developer portal > Bot > Privileged Gateway Intents

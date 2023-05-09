@@ -15,6 +15,7 @@ if TOKEN == None:
 
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
+intents.message_content = True
 
 client = discord.Client(intents=intents)
 
@@ -30,5 +31,19 @@ async def on_ready():
 
     members = '\n - '.join([member.name for member in guild.members])
     print(f'Guild members:\n - {members}')
+
+@client.event
+async def on_member_join(member):
+    print(f'{member.name} joined the server.')
+    await member.create_dm()
+    await member.dm_channel.send(
+        f'Hello {member.name}. Welcome to the server'
+    )
+
+@client.event
+async def on_message(message: discord.Message):
+    if message.content.isnumeric():
+        await client.create_dm()
+    print(f'Message sent: {message.content}')
 
 client.run(TOKEN)
