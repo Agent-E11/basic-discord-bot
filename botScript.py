@@ -15,8 +15,9 @@ if GUILD_ID == None:
     print('Error: No DISCORD_GUILD_ID present.')
     quit()
 
-# Load commands
-COMMANDS = ['!help', '!meetingtime']
+# Load variables
+COMMAND_CHAR = '!'
+COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
 
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
@@ -81,7 +82,7 @@ async def on_message(message: discord.Message):
 # ----- Generic functions ----- #
 # Checks if a word is a command
 def is_command(word: str):
-    if not word.startswith('!'):
+    if not word.startswith(COMMAND_CHAR):
         return False
 
     # If the word is in `COMMANDS` then it's a command
@@ -92,9 +93,11 @@ def is_command(word: str):
 
 # Take a command and its parameters and return the corresponding response
 def handle_command(command: str, params: list[str]):
+
     match command:
         case '!help':
-            return f'These are some of the commands I can respond to:\n{COMMANDS}'
+            pretty_commands = '\n'.join(COMMANDS)
+            return f'These are some of the commands I can respond to:\n`{pretty_commands}`' # Backticks (`) format text as code in discord
         case '!meetingtime':
             return f'The current meeting time is:\nEvery Wednesday at 5:30pm'
 
