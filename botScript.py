@@ -15,6 +15,9 @@ if GUILD_ID == None:
     print("Error: No DISCORD_GUILD_ID present.")
     quit()
 
+# Load commands
+COMMANDS = ['help', 'meetingtime']
+
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
 intents.message_content = True # Privileged intent
@@ -22,6 +25,7 @@ intents.members = True # Privileged intent
 
 client = discord.Client(intents=intents)
 
+# ----- Client event functions ----- #
 # Runs when the bot first connects to the server (successfully)
 @client.event
 async def on_ready():
@@ -50,9 +54,11 @@ async def on_member_join(member):
 # Runs every time it detects a message
 @client.event
 async def on_message(message: discord.Message):
+    # Print message to terminal
+    print(f'{message.author.name}: {message.content}')
 
     # If the message is a command
-    if message.content.startswith('!'):
+    if is_command(message.content.split()[0]):
         # `command` is the first word, `params` is the rest of the words
         command = message.content.split()[0]
         params = message.content.split()[1:]
@@ -63,8 +69,18 @@ async def on_message(message: discord.Message):
         if "bot" in message.content.lower():
             await client.get_channel(message.channel.id).send('Hello')
 
-    # Print to terminal
-    print(f'{message.author.name}: {message.content}')
+# ----- Generic functions ----- #
 
-# Run the client. This method blocks so any code after this will not run
+def is_command(word: str):
+    if not word.startswith('!'):
+        return False
+    
+    # If the word (not including the first character) is in `COMMANDS` then it's a command
+    if word[1:] in COMMANDS:
+        return True
+    else:
+        return False
+
+# ----- RUN ----- #
+# Run the client. This method blocks so any code after will not run
 client.run(TOKEN)
