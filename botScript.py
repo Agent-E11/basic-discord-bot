@@ -9,14 +9,14 @@ GUILD_ID = int(os.getenv('DISCORD_GUILD_ID'))
 
 # If the token isn't present, print an error and quit
 if TOKEN == None:
-    print("Error: No DISCORD_TOKEN present.")
+    print('Error: No DISCORD_TOKEN present.')
     quit()
 if GUILD_ID == None:
-    print("Error: No DISCORD_GUILD_ID present.")
+    print('Error: No DISCORD_GUILD_ID present.')
     quit()
 
 # Load commands
-COMMANDS = ['help', 'meetingtime']
+COMMANDS = ['!help', '!meetingtime']
 
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
@@ -43,8 +43,10 @@ async def on_ready():
 # Runs whenever a member joins
 @client.event
 async def on_member_join(member):
+
     # Print to terminal
     print(f'{member.name} joined the server.')
+
     # Creates a DM channel with the member that just joined and sends them a friendly message
     await member.create_dm()
     await member.dm_channel.send(
@@ -59,27 +61,42 @@ async def on_message(message: discord.Message):
 
     # If the message is a command
     if is_command(message.content.split()[0]):
-        # `command` is the first word, `params` is the rest of the words
-        command = message.content.split()[0]
-        params = message.content.split()[1:]
-
-        print(f'Command: {command}\nParameters: {params}')
+        
+        if message.guild != None:
+            if message.guild.id == GUILD_ID:
+                # `command` is the first word, `params` is the rest of the words
+                command = message.content.split()[0]
+                params = message.content.split()[1:]
+                
+                response = handle_command(command, params)
+                await client.get_channel(message.channel.id).send(response)
+        
+            print(f'Command: {command}\nParameters: {params}')
+    
     else:
         # If the message mentions a bot
-        if "bot" in message.content.lower():
+        if 'bot' in message.content.lower():
             await client.get_channel(message.channel.id).send('Hello')
 
 # ----- Generic functions ----- #
-
+# Checks if a word is a command
 def is_command(word: str):
     if not word.startswith('!'):
         return False
-    
-    # If the word (not including the first character) is in `COMMANDS` then it's a command
-    if word[1:] in COMMANDS:
+
+    # If the word is in `COMMANDS` then it's a command
+    if word in COMMANDS:
         return True
     else:
         return False
+
+# Take a command and its parameters and return the corresponding response
+def handle_command(command: str, params: list[str]):
+    match command:
+        case '!help':
+            return f'These are some of the commands I can respond to:\n{COMMANDS}'
+        case '!meetingtime':
+            return f'The current meeting time is:\nEvery Wednesday at 5:30pm'
 
 # ----- RUN ----- #
 # Run the client. This method blocks so any code after will not run
