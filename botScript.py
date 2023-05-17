@@ -1,19 +1,20 @@
 import os
 import discord
-from dotenv import load_dotenv
 
-# Load environment variables from the `.env` file.
-load_dotenv()
+# Load environment variables
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD_ID = int(os.getenv('DISCORD_GUILD_ID'))
+GUILD_ID = os.getenv('DISCORD_GUILD_ID')
 
-# If the token isn't present, print an error and quit
+# If either environment variable isn't present, print an error and quit
 if TOKEN == None:
-    print('Error: No DISCORD_TOKEN present.')
+    print('Error: No DISCORD_TOKEN environment variable present.')
     quit()
+
 if GUILD_ID == None:
-    print('Error: No DISCORD_GUILD_ID present.')
+    print('Error: No DISCORD_GUILD_ID environment variable present.')
     quit()
+
+GUILD_ID = int(GUILD_ID)
 
 # Load variables
 COMMAND_CHAR = '!'
@@ -31,7 +32,7 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
 
-    guild: discord.Guild = client.get_guild(GUILD_ID)
+    guild = client.get_guild(GUILD_ID)
 
     print(
         f'{client.user} has connected to the guild:\n'
@@ -63,29 +64,35 @@ async def on_message(message: discord.Message):
     # If the message is a command
     if is_command(message.content.split()[0]):
         
+        # If the message was in the correct guild
         if message.guild != None:
             if message.guild.id == GUILD_ID:
                 # `command` is the first word, `params` is the rest of the words
                 command = message.content.split()[0]
                 params = message.content.split()[1:]
                 
+                # Get the proper response
                 response = handle_command(command, params)
+
+                # Respond in the channel of the original message
                 await client.get_channel(message.channel.id).send(response)
-        
-            print(f'Command: {command}\nParameters: {params}')
-    
-    else:
-        # If the message mentions a bot
-        if 'bot' in message.content.lower():
-            await client.get_channel(message.channel.id).send('Hello')
+
+                # Log command and parameters
+                print(f'Command: {command}\nParameters: {params}')
+
+    elif 'bot' in message.content.lower():
+        # If the message mentions a bot, say hello
+        await client.get_channel(message.channel.id).send('Hello')
+
 
 # ----- Generic functions ----- #
 # Checks if a word is a command
 def is_command(word: str):
+    # If it doesn't start with the `COMMAND_CHAR` then it isn't a command
     if not word.startswith(COMMAND_CHAR):
         return False
 
-    # If the word is in `COMMANDS` then it's a command
+    # If the word is in `COMMANDS` then it's a command, otherwise, it isn't
     if word in COMMANDS:
         return True
     else:
