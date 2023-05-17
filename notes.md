@@ -18,5 +18,5 @@ intents.message_content = True
 
 To Do
 =====
-- Make the script use environment variables instead of the `.env` file.
+- (done) Make the script use environment variables instead of the `.env` file.
 - 
