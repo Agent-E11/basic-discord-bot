@@ -1,6 +1,7 @@
 import os
 import discord
 
+# ----- Load and check variables ----- #
 # Load environment variables
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD_ID = os.getenv('DISCORD_GUILD_ID')
@@ -26,6 +27,7 @@ intents.message_content = True # Privileged intent
 intents.members = True # Privileged intent
 
 client = discord.Client(intents=intents)
+
 
 # ----- Client event functions ----- #
 # Runs when the bot first connects to the server (successfully)
@@ -80,8 +82,8 @@ async def on_message(message: discord.Message):
                 # Log command and parameters
                 print(f'Command: {command}\nParameters: {params}')
 
-    elif 'bot' in message.content.lower():
-        # If the message mentions a bot, say hello
+    elif client.user in message.mentions:
+        # If the message mentions the bot, say hello
         await client.get_channel(message.channel.id).send('Hello')
 
 
@@ -107,6 +109,7 @@ def handle_command(command: str, params: list[str]):
             return f'These are some of the commands I can respond to:\n`{pretty_commands}`' # Backticks (`) format text as code in discord
         case '!meetingtime':
             return f'The current meeting time is:\nEvery Wednesday at 5:30pm'
+
 
 # ----- RUN ----- #
 # Run the client. This method blocks so any code after will not run

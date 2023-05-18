@@ -11,4 +11,6 @@ RUN pip install -r /app/requirements.txt
 ADD botScript.py /app/botScript.py
 
 # Run the script when the container starts
-ENTRYPOINT ["python", "/app/botScript.py"]
+ENTRYPOINT ["python"]
+
+CMD ["/app/botScript.py"]
