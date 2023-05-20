@@ -63,6 +63,11 @@ async def on_message(message: discord.Message):
     # Print message to terminal
     print(f'{message.author.name}: {message.content}')
 
+    if message.content.lower() == 'test':
+        print('test detected')
+        with open('./file.txt') as f:
+            await client.get_channel(message.channel.id).send(f'File contents:\n{f.read()}')
+
     # If the message is a command
     if is_command(message.content.split()[0]):
         
@@ -84,7 +89,7 @@ async def on_message(message: discord.Message):
                 
     # If the message mentions the bot and the first word in the message is any string in the tuple, bot will say hello
     elif client.user in message.mentions and message.content.split()[0].lower() in ('hello', 'hi'):
-        
+
         await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 
 
