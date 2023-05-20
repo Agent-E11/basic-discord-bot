@@ -8,14 +8,25 @@ It is currently not very customizable, but I am planning on making it more usefu
 How to use it
 -------------
 
-First, you must [make a Discord application](#), then, [save the bot's token](#).
+First, you must [make a Discord application](https://discordpy.readthedocs.io/en/latest/discord.html), and save the bot's token.
 
-Then, you should [make a Discord guild](#) ("guild" is the technical term for a Discord server), and [save its ID](#).
+Now, you need to give the bot some privileged intents (you can read more about privileged intents [here](https://discordpy.readthedocs.io/en/stable/intents.html) if you like).
 
-There are 2 ways to run the bot script:
+In the [developer portal](https://discord.com/developers/applications), select your application and go to the bot tab. Scroll down to the Privileged Gateway Intents section and enable the following intents:
+
+- Server Members Intent
+- Message Content Intent
+
+Then, you should [make a Discord guild](https://www.ionos.com/digitalguide/server/know-how/how-to-set-up-a-discord-server/) ("guild" is the technical term for a Discord server), and [save its ID](https://www.alphr.com/discord-find-server-id/).
+
+Now, [invite the bot to your server](https://discordpy.readthedocs.io/en/stable/discord.html#inviting-your-bot). The bot must have the the following bot permissions (WIP):
+
+- ?
+
+You are now ready to run the script, there are 2 ways to run the bot script:
 
 - With [Docker](#docker)
-- With the standalone [Python script](#python-script-only)
+- With the standalone [Python script](#python-script)
 
 Docker
 ------
@@ -30,17 +41,19 @@ Docker
 
     - Replace `<token>` with your bot's token, and replace `<guild id>` with your guild's ID
 
-2. [Install Docker](#)
-3. Run this command in the terminal `docker run --rm --env-file ./.env -d --name discord-bot agentell/basic-discord-bot:<tag>`
-    - `--rm` means you want the container to be deleted once it stops.
-    - `--env-file ./.env` specifies that you wand to load the environment variables defined in the `.env` file into the container.
-    - `-d` means that you want to ignore the output of the container (if the command doesn't work the first time, you should try running it without the `-d` flag to see what the error is).
-    - `--name discord-bot` means you want to name the container "discord-bot", you can replace "discord-bot" with any name you want.
-    - `agentell/basic-discord-bot:<tag>` is the image you want Docker to use when running the container. You must replace `<tag>` with the correct tag though, a safe one to use is `1.1-amd64`.
+2. [Install Docker](https://docs.docker.com/get-docker/)
+3. Run this command in [the terminal](https://towardsdatascience.com/a-quick-guide-to-using-command-line-terminal-96815b97b955):
+    - `docker run --rm --env-file ./.env -d --name discord-bot agente11/basic-discord-bot:<tag>`
+
+        - `--rm` means you want the container to be deleted once it stops.
+        - `--env-file ./.env` specifies that you wand to load the environment variables defined in the `.env` file into the container.
+        - `-d` means that you want to ignore the output of the container (if the command doesn't work the first time, you should try running it without the `-d` flag to see what the error is).
+        - `--name discord-bot` means you want to name the container "discord-bot", you can replace "discord-bot" with any name you want.
+        - `agente11/basic-discord-bot:<tag>` is the image you want Docker to use when running the container. You must replace `<tag>` with the correct tag though, a safe one to use is `1.2-amd64`.
 4. If you set it up correctly, it should just work. But here are some things to try if it didn't (WIP):
-    - Permissions
-    - ID
+    - Incorrect Permissions
+    - Guild ID or Bot Token
     - Environment variables
 
-Python Script Only
-------------------
+Python Script
+-------------
