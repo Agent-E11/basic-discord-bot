@@ -17,11 +17,16 @@ In the [developer portal](https://discord.com/developers/applications), select y
 - Server Members Intent
 - Message Content Intent
 
+Save the changes.
+
 Then, you should [make a Discord guild](https://www.ionos.com/digitalguide/server/know-how/how-to-set-up-a-discord-server/) ("guild" is the technical term for a Discord server), and [save its ID](https://www.alphr.com/discord-find-server-id/).
 
 Now, [invite the bot to your server](https://discordpy.readthedocs.io/en/stable/discord.html#inviting-your-bot). The bot must have the the following bot permissions (WIP):
 
-- ?
+- Read messages/View channels
+- Send messages
+- Send messages in threads
+- Read message history
 
 You are now ready to run the script, there are 2 ways to run the bot script:
 
@@ -50,6 +55,9 @@ Docker
         - `-d` means that you want to ignore the output of the container (if the command doesn't work the first time, you should try running it without the `-d` flag to see what the error is).
         - `--name discord-bot` means you want to name the container "discord-bot", you can replace "discord-bot" with any name you want.
         - `agente11/basic-discord-bot:<tag>` is the image you want Docker to use when running the container. You must replace `<tag>` with the correct tag though, a safe one to use is `1.2-amd64`.
+
+    - You can run `docker ps` to see that the container is running.
+
 4. If you set it up correctly, it should just work. But here are some things to try if it didn't (WIP):
     - Incorrect Permissions
     - Guild ID or Bot Token
