@@ -81,10 +81,11 @@ async def on_message(message: discord.Message):
 
                 # Log command and parameters
                 print(f'Command: {command}\nParameters: {params}')
-
-    elif client.user in message.mentions:
-        # If the message mentions the bot, say hello
-        await client.get_channel(message.channel.id).send('Hello')
+                
+    # If the message mentions the bot and the first word in the message is any string in the tuple, bot will say hello
+    elif client.user in message.mentions and message.content.split()[0].lower() in ('hello', 'hi'):
+        
+        await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 
 
 # ----- Generic functions ----- #
