@@ -111,12 +111,13 @@ def is_command(word: str):
 
 # Take a command and its parameters and return the corresponding response
 def handle_command(command: str, params: list[str]):
-
-    match command:
-        case '!help':
+    
+    # Command is parsed to remove command prefix
+    match command[1:]:
+        case 'help':
             pretty_commands = '\n'.join(COMMANDS)
             return f'These are some of the commands I can respond to:\n`{pretty_commands}`' # Backticks (`) format text as code in discord
-        case '!meetingtime':
+        case 'meetingtime':
             return f'The current meeting time is:\nEvery Wednesday at 5:30pm'
 
 
