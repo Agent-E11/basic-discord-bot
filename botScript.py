@@ -84,10 +84,8 @@ async def on_message(message: discord.Message):
                 
     # If the message mentions the bot and the first word in the message is any string in the tuple, bot will say hello
     elif client.user in message.mentions and message.content.split()[0].lower() in ('hello', 'hi'):
-
-        # The name of the user who sent the message, if a nickname is present then it will use that instead
-        sender = message.author.name if message.author.nick == None else message.author.nick
-        await client.get_channel(message.channel.id).send(f'Hello {sender}!')
+        
+        await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 
 
 # ----- Generic functions ----- #
