@@ -1,25 +1,33 @@
-import os
+from configparser import ConfigParser
 import discord
 
 # ----- Load and check variables ----- #
-# Load environment variables
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD_ID = os.getenv('DISCORD_GUILD_ID')
 
-# If either environment variable isn't present, print an error and quit
+# Initialize ConfigParser and open config.ini
+config = ConfigParser()
+config.read('config.ini')
+
+# Load variables
+TOKEN = config['SETTINGS']['token']
+GUILD_ID = config['SETTINGS']['guild_id']
+
+COMMAND_CHAR = config['SETTINGS']['command_prefix']
+COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
+
+# If any of these variables aren't present, print an error and quit
 if TOKEN == None:
-    print('Error: No DISCORD_TOKEN environment variable present.')
+    print('Error: No DISCORD_TOKEN present in config.ini')
     quit()
 
 if GUILD_ID == None:
-    print('Error: No DISCORD_GUILD_ID environment variable present.')
+    print('Error: No DISCORD_GUILD_ID present in config.ini')
     quit()
 
+if COMMAND_CHAR == None:
+    print('Error: No COMMAND_PREFIX present in config.ini')
+    quit()
+    
 GUILD_ID = int(GUILD_ID)
-
-# Load variables
-COMMAND_CHAR = '!'
-COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
 
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
@@ -46,7 +54,7 @@ async def on_ready():
 
 # Runs whenever a member joins
 @client.event
-async def on_member_join(member):
+async def on_member_join(member: discord.Member):
 
     # Print to terminal
     print(f'{member.name} joined the server.')
