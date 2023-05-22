@@ -1,11 +1,14 @@
+import os
 from configparser import ConfigParser
 import discord
 
 # ----- Load and check variables ----- #
-
-# Initialize ConfigParser and open config.ini
+# Initialize ConfigParser
 config = ConfigParser()
-config.read('config.ini')
+# Generate the absolute path of the config file (the directory the script is in + the name of the config file)
+config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+# Load the configuration settings from the config file.
+config.read(config_file_path)
 
 # Load variables
 TOKEN = config['SETTINGS']['token']
@@ -14,17 +17,17 @@ GUILD_ID = config['SETTINGS']['guild_id']
 COMMAND_CHAR = config['SETTINGS']['command_prefix']
 COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
 
-# If any of these variables aren't present, print an error and quit
-if TOKEN == None:
-    print('Error: No DISCORD_TOKEN present in config.ini')
+# If any of these variables aren't defined, print an error and quit
+if TOKEN == None or TOKEN == '':
+    print('Error: No DISCORD_TOKEN defined in config.ini')
     quit()
 
-if GUILD_ID == None:
-    print('Error: No DISCORD_GUILD_ID present in config.ini')
+if GUILD_ID == None or GUILD_ID == '':
+    print('Error: No DISCORD_GUILD_ID defined in config.ini')
     quit()
 
-if COMMAND_CHAR == None:
-    print('Error: No COMMAND_PREFIX present in config.ini')
+if COMMAND_CHAR == None or COMMAND_CHAR == '':
+    print('Error: No COMMAND_PREFIX defined in config.ini')
     quit()
     
 GUILD_ID = int(GUILD_ID)
