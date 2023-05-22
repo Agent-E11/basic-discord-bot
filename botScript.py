@@ -19,17 +19,17 @@ COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
 
 # If any of these variables aren't defined, print an error and quit
 if TOKEN == None or TOKEN == '':
-    print('Error: No DISCORD_TOKEN defined in config.ini')
+    print('Error: No `token` defined in config.ini')
     quit()
 
 if GUILD_ID == None or GUILD_ID == '':
-    print('Error: No DISCORD_GUILD_ID defined in config.ini')
+    print('Error: No `guild_id` defined in config.ini')
     quit()
 
 if COMMAND_CHAR == None or COMMAND_CHAR == '':
-    print('Error: No COMMAND_PREFIX defined in config.ini')
+    print('Error: No `command_prefix` defined in config.ini')
     quit()
-    
+
 GUILD_ID = int(GUILD_ID)
 
 # Set the intents of the bot, to be given to the `Client` constructor
