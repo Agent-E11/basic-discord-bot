@@ -13,9 +13,9 @@ config.read(config_file_path)
 # Load variables
 TOKEN = config['SETTINGS']['token']
 GUILD_ID = config['SETTINGS']['guild_id']
-
-COMMAND_CHAR = config['SETTINGS']['command_prefix']
+COMMAND_CHAR = config['SETTINGS'].get('command_prefix', '!')
 COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
+GREETINGS = config['SETTINGS'].get('greetings', 'hello|hi').split('|')
 
 # If any of these variables aren't defined, print an error and quit
 if TOKEN == None or TOKEN == '':
@@ -94,7 +94,7 @@ async def on_message(message: discord.Message):
                 print(f'Command: {command}\nParameters: {params}')
                 
     # If the message mentions the bot and the first word in the message is any string in the tuple, bot will say hello
-    elif client.user in message.mentions and message.content.split()[0].lower() in ('hello', 'hi'):
+    elif client.user in message.mentions and message.content.split()[0].lower() in GREETINGS:
         
         await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 

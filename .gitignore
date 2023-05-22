@@ -1,3 +1,4 @@
 .env
 botScript original.py
 botScript docker.py
+config_local.ini
