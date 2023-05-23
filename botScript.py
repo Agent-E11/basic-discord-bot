@@ -8,14 +8,18 @@ config = ConfigParser()
 # Generate the absolute path of the config file (the directory the script is in + the name of the config file)
 config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
 # Load the configuration settings from the config file.
-config.read(config_file_path)
+print(f'Read config file(s): {config.read(config_file_path)}')
 
 # Load variables
-TOKEN = config['SETTINGS']['token']
-GUILD_ID = config['SETTINGS']['guild_id']
-COMMAND_CHAR = config['SETTINGS'].get('command_prefix', '!')
-COMMANDS = [f'{COMMAND_CHAR}help', f'{COMMAND_CHAR}meetingtime']
-GREETINGS = config['SETTINGS'].get('greetings', 'hello|hi').split('|')
+TOKEN = config['settings']['token']
+GUILD_ID = config.getint('settings', 'guild_id')
+COMMAND_CHAR = config['settings'].get('command_prefix', '!')
+# `COMMANDS` is the list of commands defined in the config file.
+# If the section starts with `command.`, then the command is the second part of that section's name
+COMMANDS = [section[8:] for section in config if section.startswith('command.')]
+print(f'COMMANDS: {COMMANDS}')
+
+GREETINGS = config['settings'].get('greetings', 'hello|hi').split('|')
 
 # If any of these variables aren't defined, print an error and quit
 if TOKEN == None or TOKEN == '':
@@ -29,8 +33,6 @@ if GUILD_ID == None or GUILD_ID == '':
 if COMMAND_CHAR == None or COMMAND_CHAR == '':
     print('Error: No `command_prefix` defined in config.ini')
     quit()
-
-GUILD_ID = int(GUILD_ID)
 
 # Set the intents of the bot, to be given to the `Client` constructor
 intents = discord.Intents.default()
@@ -106,8 +108,8 @@ def is_command(word: str):
     if not word.startswith(COMMAND_CHAR):
         return False
 
-    # If the word is in `COMMANDS` then it's a command, otherwise, it isn't
-    if word in COMMANDS:
+    # If the word (excluding the command prefix) is in `COMMANDS` then it's a command, otherwise, it isn't
+    if word[1:] in COMMANDS:
         return True
     else:
         return False
@@ -115,13 +117,8 @@ def is_command(word: str):
 # Take a command and its parameters and return the corresponding response
 def handle_command(command: str, params: list[str]):
     
-    # Command is parsed to remove command prefix
-    match command[1:]:
-        case 'help':
-            pretty_commands = '\n'.join(COMMANDS)
-            return f'These are some of the commands I can respond to:\n`{pretty_commands}`' # Backticks (`) format text as code in discord
-        case 'meetingtime':
-            return f'The current meeting time is:\nEvery Wednesday at 5:30pm'
+    # Return the content of the given command
+    return config[f'command.{command[1:]}']['content']
 
 
 # ----- RUN ----- #
