@@ -2,6 +2,7 @@ import os
 from configparser import ConfigParser
 import discord
 import library
+import random
 
 # ----- Load and check variables ----- #
 # Initialize ConfigParser
@@ -100,7 +101,8 @@ async def on_message(message: discord.Message):
 
     # If the message mentions the bot and the first word in the message is a "greeting", bot will say hello
     elif client.user in message.mentions and message.content.lower().startswith(tuple(GREETINGS)):
-        await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
+        greeting_response: str = random.choice(GREETINGS)
+        await client.get_channel(message.channel.id).send(f'{greeting_response[0].upper() + greeting_response[1:]}, {message.author.display_name}!')
 
 
 # ----- Generic functions ----- #
