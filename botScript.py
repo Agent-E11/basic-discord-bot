@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser
 import discord
+import library
 
 # ----- Load and check variables ----- #
 # Initialize ConfigParser
@@ -77,7 +78,7 @@ async def on_message(message: discord.Message):
     print(f'{message.author.name}: {message.content}')
 
     # If the message is a command
-    if is_command(message.content.split()[0]):
+    if is_command(message.content.split()[0]) and message.author != client.user:
         
         # If the message was in the correct guild
         if message.guild != None:
@@ -89,15 +90,16 @@ async def on_message(message: discord.Message):
                 # Get the proper response
                 response = handle_command(command, params)
 
-                # Respond in the channel of the original message
-                await client.get_channel(message.channel.id).send(response)
+                # If the command generated a response
+                if response != None:
+                    # Respond in the channel of the original message
+                    await client.get_channel(message.channel.id).send(response)
 
                 # Log command and parameters
                 print(f'Command: {command}\nParameters: {params}')
-                
-    # If the message mentions the bot and the first word in the message is any string in the tuple, bot will say hello
+
+    # If the message mentions the bot and the first word in the message is a "greeting", bot will say hello
     elif client.user in message.mentions and message.content.split()[0].lower() in GREETINGS:
-        
         await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 
 
@@ -116,10 +118,28 @@ def is_command(word: str):
 
 # Take a command and its parameters and return the corresponding response
 def handle_command(command: str, params: list[str]):
-    
-    # Return the content of the given command
-    return config[f'command.{command[1:]}']['content']
+    command_section = f'command.{command[1:]}'
+    command_type = config[command_section]['type']
 
+    if command_type == 'static':
+        # If the command is static
+        # Return the content of the given command
+        return config[command_section]['content']
+    elif command_type == 'dynamic':
+        # If the command is dynamic
+        # Get the function in `library` that is associated with the command (defined in the config file)
+        func = getattr(library, config[command_section]['function'], None)
+        if func != None:
+            # If the command was successfully retrieved, run it and return its value
+            return func(params)
+        else:
+            # If the command was not present in the `library` module, return None and print an error.
+            print(f'The function in the `config.ini` file that is associated with the `{command}` command is not present in `library.py`')
+            return None
+    else:
+        # If the command doesn't have a valid type, return none and print an error
+        print(f'The `{command}` command has an invalid type specified in the `config.ini` file')
+        return None
 
 # ----- RUN ----- #
 # Run the client. This method blocks so any code after will not run
