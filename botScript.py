@@ -5,18 +5,19 @@ import discord
 import library
 import random
 
+# ----- Load config file ----- #
+# Initialize ConfigParser
+config = ConfigParser()
+# Generate the absolute path of the config file (the directory the script is in + the name of the config file)
+config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+# Load the configuration settings from the config file.
+print(f'Read config file(s): {config.read(config_file_path)}')
 
 # ----- Load custom dependencies ----- #
-# Initialize ConfigParser
-customImports = ConfigParser()
-# Generate the absolute path of the dependencies file (the directory the script is in + the name of the config file)
-customImports_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dependencies.ini')
-# Load dependencies from dependencies file
-print(f'Reading dependencie(s): {customImports.read(customImports_file_path)}')
 
-if customImports['dependencies']:
+if config['dependencies']:
 
-    for mod, ver in customImports['dependencies'].items():
+    for mod, ver in config['dependencies'].items():
         # If a version is not given in `ver` then do not include in print strings
         is_ver_present: str = ''
         if ver != '':
@@ -38,13 +39,6 @@ if customImports['dependencies']:
     print(f'Done loading dependencies...')
 
 # ----- Load and check variables ----- #
-# Initialize ConfigParser
-config = ConfigParser()
-# Generate the absolute path of the config file (the directory the script is in + the name of the config file)
-config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
-# Load the configuration settings from the config file.
-print(f'Read config file(s): {config.read(config_file_path)}')
-
 # Load variables
 TOKEN = config['settings']['token']
 GUILD_ID = config.getint('settings', 'guild_id')
