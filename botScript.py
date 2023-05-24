@@ -99,7 +99,7 @@ async def on_message(message: discord.Message):
                 print(f'Command: {command}\nParameters: {params}')
 
     # If the message mentions the bot and the first word in the message is a "greeting", bot will say hello
-    elif client.user in message.mentions and message.content.split()[0].lower() in GREETINGS:
+    elif client.user in message.mentions and message.content.lower().startswith(tuple(GREETINGS)):
         await client.get_channel(message.channel.id).send(f'Hello {message.author.display_name}!')
 
 
