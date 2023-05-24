@@ -1,8 +1,41 @@
 import os
+import subprocess
 from configparser import ConfigParser
 import discord
 import library
 import random
+
+
+# ----- Load custom dependencies ----- #
+# Initialize ConfigParser
+customImports = ConfigParser()
+# Generate the absolute path of the dependencies file (the directory the script is in + the name of the config file)
+customImports_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dependencies.ini')
+# Load dependencies from dependencies file
+print(f'Reading dependencie(s): {customImports.read(customImports_file_path)}')
+
+if customImports['dependencies']:
+
+    for mod, ver in customImports['dependencies'].items():
+        # If a version is not given in `ver` then do not include in print strings
+        is_ver_present: str = ''
+        if ver != '':
+            is_ver_present = f'version {ver}'
+        
+        print(f'Installing {mod}' + is_ver_present)
+
+        try:
+            # Run pip install
+            subprocess.run(f'pip install {mod} --version {ver}', check=True)
+        except subprocess.CalledProcessError as e:
+            print(e)
+
+            print(f'Could not install {mod, ver}. Check error logs above')
+            exit()
+
+        print(f'Installed {mod}' + is_ver_present)
+
+    print(f'Done loading dependencies...')
 
 # ----- Load and check variables ----- #
 # Initialize ConfigParser
