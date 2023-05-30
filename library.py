@@ -1,2 +1,5 @@
 def command_echo(params: list[str]):
-    return f'{" ".join(params)}'
+    if params == []:
+        return None
+    else:
+        return f'{" ".join(params)}'

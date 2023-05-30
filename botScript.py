@@ -1,42 +1,51 @@
 import os
 import subprocess
 from configparser import ConfigParser
-import discord
-import library
 import random
+import discord
 
 # ----- Load config file ----- #
 # Initialize ConfigParser
 config = ConfigParser()
+
 # Generate the absolute path of the config file (the directory the script is in + the name of the config file)
 config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+
 # Load the configuration settings from the config file.
 print(f'Read config file(s): {config.read(config_file_path)}')
 
 # ----- Load custom dependencies ----- #
-
-if config['dependencies']:
+if 'dependencies' in config:
+    
+    print('Attempting to load dependencies...')
 
     for mod, ver in config['dependencies'].items():
-        # If a version is not given in `ver` then do not include in print strings
-        is_ver_present: str = ''
-        if ver != '':
-            is_ver_present = f'version {ver}'
-        
-        print(f'Installing {mod}' + is_ver_present)
+        print(f'Installing {mod} {ver}')
+
+        # If a version is not given in `ver` then do not include in `pip` command (install the latest version)
+        if ver == '':
+            command = ['pip', 'install', f'{mod}']
+        else:
+            command = ['pip', 'install', f'{mod}=={ver}']
 
         try:
             # Run pip install
-            subprocess.run(f'pip install {mod} --version {ver}', check=True)
+            subprocess.run(command, check=True)
         except subprocess.CalledProcessError as e:
             print(e)
-
             print(f'Could not install {mod, ver}. Check error logs above')
             exit()
 
-        print(f'Installed {mod}' + is_ver_present)
+        print(f'Installed {mod} {ver}')
 
     print(f'Done loading dependencies...')
+
+# After installing all the dependencies it can load the custom library
+try:
+    import library
+except ModuleNotFoundError as e:
+    print(f'Module not found: {e.msg}')
+    quit()
 
 # ----- Load and check variables ----- #
 # Load variables
