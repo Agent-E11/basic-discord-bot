@@ -1,8 +1,10 @@
+# ----- Import Modules ----- #
 import os
 import subprocess
 from configparser import ConfigParser
 import random
 import discord
+
 
 # ----- Load config file ----- #
 # Initialize ConfigParser
@@ -13,6 +15,7 @@ config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'con
 
 # Load the configuration settings from the config file.
 print(f'Read config file(s): {config.read(config_file_path)}')
+
 
 # ----- Load custom dependencies ----- #
 if 'dependencies' in config:
@@ -46,6 +49,7 @@ try:
 except ModuleNotFoundError as e:
     print(f'Module not found: {e.msg}')
     quit()
+
 
 # ----- Load and check variables ----- #
 # Load variables
@@ -120,10 +124,10 @@ async def on_message(message: discord.Message):
         # If the message was in the correct guild
         if message.guild != None:
             if message.guild.id == GUILD_ID:
-                # `command` is the first word, `params` is the rest of the words
+                # `command` is the first word, `params` is the rest of the words as a single string.
                 command = message.content.split()[0]
-                params = message.content.split()[1:]
-                
+                params = ' '.join(message.content.split()[1:])
+
                 # Get the proper response
                 response = handle_command(command, params)
 
@@ -155,7 +159,7 @@ def is_command(word: str):
         return False
 
 # Take a command and its parameters and return the corresponding response
-def handle_command(command: str, params: list[str]):
+def handle_command(command: str, params: str):
     command_section = f'command.{command[1:]}'
     command_type = config[command_section]['type']
 
@@ -174,10 +178,12 @@ def handle_command(command: str, params: list[str]):
             # If the command was not present in the `library` module, return None and print an error.
             print(f'The function in the `config.ini` file that is associated with the `{command}` command is not present in `library.py`')
             return None
+
     else:
         # If the command doesn't have a valid type, return none and print an error
         print(f'The `{command}` command has an invalid type specified in the `config.ini` file')
         return None
+
 
 # ----- RUN ----- #
 # Run the client. This method blocks so any code after will not run

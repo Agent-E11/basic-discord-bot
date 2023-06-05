@@ -1,12 +1,14 @@
-Basic Discord Bot
-=================
+# Basic Discord Bot #
 
 This is a basic discord bot, written in Python using the Discord.py module. Its original intent was to make a Discord bot that you can run in a Docker container, but you can also run the script by itself.
 
 It is currently not very customizable, but I am planning on making it more useful in the future.
 
-How to use it
--------------
+---
+
+## How to use it ##
+
+### Make A Discord App ###
 
 First, you must [make a Discord application](https://discordpy.readthedocs.io/en/latest/discord.html), and save the bot's token.
 
@@ -33,8 +35,7 @@ You are now ready to run the script, there are 2 ways to run the bot script:
 - With [Docker](#docker)
 - With the standalone [Python script](#python-script)
 
-Docker
-------
+### Docker ###
 
 1. Create a `.env` file:
     - In a folder of your choice, create a file called `.env`. In that file, type the following:
@@ -63,5 +64,8 @@ Docker
     - Guild ID or Bot Token
     - Environment variables
 
-Python Script
--------------
+### Python Script ###
+
+---
+
+## Custom Commands ##
