@@ -129,7 +129,7 @@ async def on_message(message: discord.Message):
                 params = ' '.join(message.content.split()[1:])
 
                 # Get the proper response
-                response = handle_command(command, params)
+                response = await handle_command(command, params, message, client, config)
 
                 # If the command generated a response
                 if response != None:
@@ -159,7 +159,7 @@ def is_command(word: str):
         return False
 
 # Take a command and its parameters and return the corresponding response
-def handle_command(command: str, params: str):
+async def handle_command(command: str, params: str, message: discord.Message, client: discord.Client, config: ConfigParser):
     command_section = f'command.{command[1:]}'
     command_type = config[command_section]['type']
 
@@ -173,7 +173,19 @@ def handle_command(command: str, params: str):
         func = getattr(library, config[command_section]['function'], None)
         if func != None:
             # If the command was successfully retrieved, run it and return its value
-            return func(params)
+            return func(params, message, client, config)
+        else:
+            # If the command was not present in the `library` module, return None and print an error.
+            print(f'The function in the `config.ini` file that is associated with the `{command}` command is not present in `library.py`')
+            return None
+
+    elif command_type == 'dynamic_async':
+        # If the command is dynamic and asynchronous
+        # Get the function in `library` that is associated with the command (defined in the config file)
+        func = getattr(library, config[command_section]['function'], None)
+        if func != None:
+            # If the command was successfully retrieved, run it and return its value
+             return await func(params, message, client, config)
         else:
             # If the command was not present in the `library` module, return None and print an error.
             print(f'The function in the `config.ini` file that is associated with the `{command}` command is not present in `library.py`')
@@ -181,7 +193,7 @@ def handle_command(command: str, params: str):
 
     else:
         # If the command doesn't have a valid type, return none and print an error
-        print(f'The `{command}` command has an invalid type specified in the `config.ini` file')
+        print(f'The `{command}` command has an invalid `type` specified in the `config.ini` file')
         return None
 
 
