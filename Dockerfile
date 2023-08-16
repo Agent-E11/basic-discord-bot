@@ -5,7 +5,7 @@ FROM python:3.10.8
 ADD requirements.txt /app/requirements.txt
 
 # Add the default `library` module
-ADD library.py /app/library.py
+ADD library.py /app/botconf/library.py
 
 # Install requirements
 RUN pip install -r /app/requirements.txt
