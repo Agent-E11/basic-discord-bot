@@ -11,7 +11,7 @@ import discord
 config = ConfigParser()
 
 # Generate the absolute path of the config file (the directory the script is in + the name of the config file)
-config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'botconf', 'config.ini')
 secrets_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'secrets.ini')
 
 # Load the configuration settings from the config files.
@@ -45,7 +45,7 @@ if 'dependencies' in config and len(config['dependencies']) > 0:
 
 # After installing all the dependencies it can load the custom library
 try:
-    import library
+    import botconf.library as library
 except ModuleNotFoundError as e:
     print(f'Module not found: {e.msg}')
     quit()
