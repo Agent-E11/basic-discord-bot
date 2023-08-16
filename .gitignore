@@ -1,3 +1,4 @@
 .env
 config_local.ini
 __pycache__/
+secrets.ini

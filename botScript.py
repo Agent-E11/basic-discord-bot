@@ -12,13 +12,13 @@ config = ConfigParser()
 
 # Generate the absolute path of the config file (the directory the script is in + the name of the config file)
 config_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+secrets_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'secrets.ini')
 
-# Load the configuration settings from the config file.
-print(f'Read config file(s): {config.read(config_file_path)}')
-
+# Load the configuration settings from the config files.
+print(f'Read config file(s): {config.read([config_file_path, secrets_file_path])}')
 
 # ----- Load custom dependencies ----- #
-if 'dependencies' in config:
+if 'dependencies' in config and len(config['dependencies']) > 0:
     
     print('Attempting to load dependencies...')
 
@@ -54,7 +54,7 @@ except ModuleNotFoundError as e:
 # ----- Load and check variables ----- #
 # Load variables
 TOKEN = config['settings']['token']
-GUILD_ID = config.getint('settings', 'guild_id')
+GUILD_ID = config['settings']['guild_id']
 COMMAND_CHAR = config['settings'].get('command_prefix', '!')
 # `COMMANDS` is the list of commands defined in the config file.
 # If the section starts with `command.`, then the command is the second part of that section's name
@@ -70,6 +70,12 @@ if TOKEN == None or TOKEN == '':
 
 if GUILD_ID == None or GUILD_ID == '':
     print('Error: No `guild_id` defined in config.ini')
+    quit()
+
+try:
+    GUILD_ID = int(GUILD_ID)
+except ValueError:
+    print('Error: The `guild_id` specified in config.ini is not a valid integer.')
     quit()
 
 if COMMAND_CHAR == None or COMMAND_CHAR == '':
