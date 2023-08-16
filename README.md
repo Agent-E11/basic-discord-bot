@@ -1,5 +1,8 @@
 # Basic Discord Bot #
 
+!!! Disclaimer !!!
+This documentation is very out of date. I need to update it. If you want to figure out how it works, you can probably look at the source code, or create a new Discussion. The README might help a little, but don't count on it.
+
 This is a basic discord bot, written in Python using the Discord.py module. Its original intent was to make a Discord bot that you can run in a Docker container, but you can also run the script by itself.
 
 It is currently not very customizable, but I am planning on making it more useful in the future.
